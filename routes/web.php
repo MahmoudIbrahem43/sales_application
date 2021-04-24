@@ -15,7 +15,7 @@ use App\Http\Controllers\ProductController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('organizations.index');
 });
 
 
@@ -23,3 +23,8 @@ Route::get('/', function () {
 Route::resource('organizations', OrganizationController::class);
 
 Route::resource('products', ProductController::class);
+  
+
+Route::get('/organizations/delete/{id}', [ OrganizationController::class, 'deleteOrganization']); 
+
+ Route::get('/products/delete/{id}', [ ProductController::class, 'deleteProduct']);

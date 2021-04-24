@@ -1,15 +1,11 @@
-
-//   datatable script
 let table = {};
 $(function () {
     var HostUrl = window.location.origin;
     table = $('.yajra-datatable').DataTable({
         processing: true,
         serverSide: true,
-
-
         ajax: {
-            url: HostUrl + "/articles",
+            url: HostUrl + "/organizations",
             type: "GET",
         },
         columns: [{
@@ -17,28 +13,25 @@ $(function () {
             name: 'id'
         },
         {
-            data: 'author',
-            name: 'author'
+            data: 'name',
+            name: 'name'
         },
         {
-            data: 'title',
-            name: 'title'
+            data: 'location',
+            name: 'location'
         },
         {
-            data: 'content',
-            name: 'content'
+            data: 'employees',
+            name: 'employees'
         },
-        // {
-        //     data: 'text',
-        //     name: 'comment'
-        // },
+
         {
             data: "edit",
             name: "edit",
             render: function (d, t, r, m) {
                 var RowData = r;
                 return `
-                         <a class="btn btn-info" href="${HostUrl + "/articles/" + RowData.id + "/edit"}">edit</a>
+                         <a class="btn btn-info" href="${HostUrl + "/organizations/" + RowData.id + "/edit"}">edit</a>
                          `;
 
             }
@@ -50,7 +43,7 @@ $(function () {
                 var RowData = r;
                 var TokenValue = $('input[name="_token"]').val();
                 return `
-                         <button type="button" class="btn btn-danger btn-flat btn-sm remove-article" data-id="${RowData.id}">delete  </button>`;
+                         <button type="button" class="btn btn-danger btn-flat btn-sm remove-organization" data-id="${RowData.id}">delete  </button>`;
             }
         },
         ]
@@ -62,19 +55,19 @@ $(function () {
 
 
 // jquery confirm script
-$(document).on("click", "button.remove-article", function () {
+$(document).on("click", "button.remove-organization", function () {
     var Host = window.location.origin;
     var current_object = $(this);
     var id = current_object.attr('data-id');
     if (id == null || id == "") {
-        swal("Can't Read Article Id", {
+        swal("Can't Read organization Id", {
             icon: "warning",
         });
         return;
     }
     swal({
         title: "Are you sure?",
-        text: "You will delete this article!",
+        text: "You will delete this organization!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -85,7 +78,7 @@ $(document).on("click", "button.remove-article", function () {
         if (willDelete) {
 
             $.ajax({
-                url: Host + "/articles/delete/" + id,
+                url: Host + "/organizations/delete/" + id,
                 type: "GET",
                 dataType: 'json',
             }).done(function (result) {
@@ -111,14 +104,14 @@ $(document).on("click", "button.remove-article", function () {
 $(document).ready(function() {
     $('form[id="basic-form"]').validate({
         rules: {
-            author:"required",
-            title:"required",
-            content:"required",
+            name:"required",
+            location:"required",
+            employees:"required",
         },
         messages: {
-            author: 'This field is required',
-            title: 'This field is required',
-            content: 'This field is required',
+            name: 'This field is required',
+            location: 'This field is required',
+            employees: 'This field is required',
         },
         submitHandler: function(form) {
             form.submit();

@@ -1,15 +1,11 @@
-
-//   datatable script
 let table = {};
 $(function () {
     var HostUrl = window.location.origin;
     table = $('.yajra-datatable').DataTable({
         processing: true,
         serverSide: true,
-
-
         ajax: {
-            url: HostUrl + "/comments",
+            url: HostUrl + "/products",
             type: "GET",
         },
         columns: [{
@@ -17,24 +13,38 @@ $(function () {
             name: 'id'
         },
         {
-            data: 'author',
-            name: 'author'
+            data: 'name',
+            name: 'name'
         },
         {
-            data: 'text',
-            name: 'text'
+            data: "logo",
+            name: "logo",
+            render: function(d, t, r, m) {
+                if (d == null) {
+                    return null;
+                } else {
+                    return `
+                        <img src="${d}" width="80" height="80">
+                              `;
+                }
+            }
         },
         {
-            data: 'article_id',
-            name: 'article_id'
+            data: 'price',
+            name: 'price'
         },
+        {
+            data: 'organization_id',
+            name: 'organization_id'
+        },
+
         {
             data: "edit",
             name: "edit",
             render: function (d, t, r, m) {
                 var RowData = r;
                 return `
-                         <a class="btn btn-info" href="${HostUrl + "/comments/" + RowData.id + "/edit"}">edit</a>
+                         <a class="btn btn-info" href="${HostUrl + "/products/" + RowData.id + "/edit"}">edit</a>
                          `;
 
             }
@@ -46,7 +56,7 @@ $(function () {
                 var RowData = r;
                 var TokenValue = $('input[name="_token"]').val();
                 return `
-                         <button type="button" class="btn btn-danger btn-flat btn-sm remove-article" data-id="${RowData.id}">delete  </button>`;
+                         <button type="button" class="btn btn-danger btn-flat btn-sm remove-product" data-id="${RowData.id}">delete  </button>`;
             }
         },
         ]
@@ -58,20 +68,19 @@ $(function () {
 
 
 // jquery confirm script
-$(document).on("click", "button.remove-article", function () {
+$(document).on("click", "button.remove-product", function () {
     var Host = window.location.origin;
     var current_object = $(this);
     var id = current_object.attr('data-id');
     if (id == null || id == "") {
-        swal("Can't Read Article Id", {
+        swal("Can't Read product Id", {
             icon: "warning",
         });
         return;
-    }  
-
+    }
     swal({
         title: "Are you sure?",
-        text: "You will delete this article!",
+        text: "You will delete this product!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -82,7 +91,7 @@ $(document).on("click", "button.remove-article", function () {
         if (willDelete) {
 
             $.ajax({
-                url: Host + "/comments/delete/" + id,
+                url: Host + "/products/delete/" + id,
                 type: "GET",
                 dataType: 'json',
             }).done(function (result) {
@@ -108,14 +117,16 @@ $(document).on("click", "button.remove-article", function () {
 $(document).ready(function() {
     $('form[id="basic-form2"]').validate({
         rules: {
-            author:"required",
-            text:"required",
-            article_id:"required",
+            name:"required",
+            logo:"required",
+            price:"required",
+            organization_id:"required",
         },
         messages: {
-            author: 'This field is required',
-            text: 'This field is required',
-            article_id: 'This field is required',
+            name: 'This field is required',
+            logo: 'This field is required',
+            price: 'This field is required',
+            organization_id: 'This field is required',
         },
         submitHandler: function(form) {
             form.submit();
